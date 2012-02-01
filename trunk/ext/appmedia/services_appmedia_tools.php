@@ -23,6 +23,9 @@ if ($_POST) {
 	else if (!$app->manageDatabase() && "drop" === $_POST['action']) {
 		$errormsg[] = "Funci&oacute;n de 'Borrar base de datos' desactivada.";
 	}
+	else if ("info" === $_POST['action']) {
+		$errormsg[] = "Funci&oacute;n de 'Buscar informaci&oacute;n en la web' no implementada.";
+	}
 	
 	if ((!$input_errors) || (!$errormsg)) {
 		$do_action = true;
@@ -52,9 +55,10 @@ if (!isset($do_action)) {
 			<table width="100%" border="0" cellpadding="6" cellspacing="0">
 			<?php html_combobox("action", gettext("Command"), $action,
 				array(
-					"scan" => "Escanear directorios",
 					"create" => "Crear base de datos",
-					"drop" => "Borrar base de datos"
+					"drop" => "Borrar base de datos",
+					"info" => "Buscar informaci&oacute;n en la web",
+					"scan" => "Escanear directorios"
 				), "", true);?>			
 			</table>
 			<div id="submit">

@@ -35,6 +35,8 @@ try {
 			</ul>
 		</td>
 	</tr>
+	
+
 	<tr>
 		<td class="tabcont">
 		<form action="services_appmedia.php" method="post">
@@ -42,17 +44,16 @@ try {
 		<select id="order" class="formfld" name="order">
 			<?=$app->getOptionsOrder($orderBy)?>
 		</select>
-
 		<input name="doOrder" type="submit" class="formbtn" value="Ordenar" />
-		<br /><br />
 
+		<br/><br/>
                                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                         <tr>
-                                                <td width="35%" class="listhdrlr">Nombre de la Serie</td>
+                                                <td width="36%" class="listhdrlr">Nombre de la Serie</td>
                                                 <td width="5%" class="listhdrr">Temporadas</td>
-                                                <td width="5%" class="listhdrr">Finalizada</td>
-												<td width="10%" class="listhdrr">En Descarga</td>
-                                                <td width="35%" class="listhdrr">Ruta (Carpeta compartida)</td>
+												<td width="14%" class="listhdrr">&Uacute;ltima temporada completada</td>
+                                                <td width="25%" class="listhdrr">Ruta (Carpeta compartida)</td>
+                                                <td width="10%" class="listhdrr">Notas</td>
                                                 <td width="10%" class="list"></td>
                                         </tr>
 
@@ -63,12 +64,12 @@ foreach($rows as $row) {
 										<tr>
 											<td class="listlr"><?=htmlspecialchars($row["nombreSerie"])?>&nbsp;</td>
 											<td class="listr"><?=$row["numTemporadas"]?>&nbsp;</td>
-											<td class="listbg"><?=$row["finalizada"]?>&nbsp;</td>
-											<td class="listbg"><?=((1==$row["enDescarga"])?gettext("Yes"):gettext("No"))?>&nbsp;</td>
+											<td class="listbg"><?=((1==$row["enDescarga"])?gettext("No")." (Disponibles: ".$row["lastEpisode"].")":gettext("Yes"))?>&nbsp;</td>
 											<td class="listr"><?=htmlspecialchars($row["rutaFisica"])?>&nbsp;</td>
+											<td class="listr"><?=$row["notas"]?>&nbsp;</td>
 											<td valign="middle" nowrap="nowrap" class="list">
 												<a href="services_appmedia_edit.php?uuid=<?=$row['uuid'];?>"><img src="e.gif" title="<?=gettext("Edit");?>" border="0" alt="<?=gettext("Edit");?>" /></a>&nbsp;
-												<a href="services_appmedia_edit.php?act=del&amp;uuid=<?=$row['uuid'];?>" onclick="return confirm('Esta seguro de borrar el registro')"><img src="x.gif" title="<?=gettext("Delete");?>" border="0" alt="<?=gettext("Delete");?>" /></a>
+												<a href="services_appmedia_edit.php?act=del&amp;uuid=<?=$row['uuid'];?>" onclick="return confirm('&iquest;Est&aacute;s seguro de borrar el registro?')"><img src="x.gif" title="<?=gettext("Delete");?>" border="0" alt="<?=gettext("Delete");?>" /></a>
 											</td>
 											</tr>
 <?php
