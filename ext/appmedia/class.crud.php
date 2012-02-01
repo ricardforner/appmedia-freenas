@@ -136,7 +136,7 @@ class crud {
          * @access public
          * @param string $table
          * @param string $fieldname, The field to be updated
-         * @param string $value The new value
+         * @param string or array $value The new value
          * @param string $pk The primary key
          * @param string $id The id
          *
@@ -144,7 +144,17 @@ class crud {
          */
         public function dbUpdate($table, $fieldname, $value, $pk, $id) {
             $this->conn();
-            $sql = "UPDATE `$table` SET `$fieldname`='{$value}' WHERE `$pk` = :id";
+			if (is_array($value)) {
+				$fieldnames = array_keys($value);
+				$fieldsUpd = "";
+				foreach($fieldnames as $key) {
+					$fieldsUpd.= "`$key`='{$value[$key]}',";
+				}
+				$fieldsUpd = substr($fieldsUpd,0,-1);
+				$sql = "UPDATE `$table` SET $fieldsUpd WHERE `$pk` = :id";
+			} else {
+				$sql = "UPDATE `$table` SET `$fieldname`='{$value}' WHERE `$pk` = :id";
+			}
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_STR);
             $stmt->execute();

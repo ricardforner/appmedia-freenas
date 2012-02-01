@@ -10,11 +10,12 @@ class AppMedia extends crud {
 	public function __construct() {
 		$this->dsn = "sqlite:/mnt/cfinterno/usr/www/bbdd/media_series.sdb";
 		$this->dirSources = array(
-			"/mnt/share01/SERIES",
-			"/mnt/share02/SERIES",
-			"/mnt/share03/MINISERIES"
+			"/mnt/share01/SERIES"
+			,"/mnt/share02/SERIES"
+			,"/mnt/share03/MINISERIES"
+//			,"/mnt/nmt/Video"
 		);
-		$this->manageBBDD = false;
+		$this->manageBBDD = true;
 	}
 	
 	public function manageDatabase() {
@@ -22,7 +23,7 @@ class AppMedia extends crud {
 	}
 	
 	public function listaSeries($paramOrder) {
-		$order = isset($paramOrder)?$paramOrder:"rutaFisica";
+		$order = isset($paramOrder)?$paramOrder:"nombreSerie";
 		return $this->rawSelect("SELECT * FROM tbSerie ORDER BY $order");
 	}
 
@@ -33,19 +34,30 @@ class AppMedia extends crud {
 	}
 
 	public function doCreateDatabase() {
+		// Tabla de series
 		$sql = "CREATE TABLE tbSerie (
 				uuid INTEGER PRIMARY KEY AUTOINCREMENT,
 				nombreSerie VARCHAR(100),
 				numTemporadas INTEGER,
-				finalizada CHAR(1),
 				enDescarga CHAR(1),
 				rutaFisica VARCHAR(255),
+				lastEpisode VARCHAR2(14),
 				notas VARCHAR(255)              
+			)";
+		$this->rawQuery($sql);
+		//Tabla complementaria de series
+		$sql = "CREATE TABLE tbSerieComp (
+				uuid INTEGER PRIMARY KEY AUTOINCREMENT,
+				idSerie INTEGER,
+				fuente VARCHAR(20),
+				url VARCHAR(255)
 			)";
 		$this->rawQuery($sql);
 	}
 	
 	public function doDropDatabase() {
+		$sql = "DROP TABLE tbSerieComp;";
+		$this->rawQuery($sql);
 		$sql = "DROP TABLE tbSerie;";
 		$this->rawQuery($sql);
 	}
@@ -70,22 +82,28 @@ class AppMedia extends crud {
 						$dirTemporadas = $this->sdir($serie["path"]."/".$serie["element"], "*tbn");
 						$numTemporadas = 0;
 						$enDescarga = 0;
-						if (0<>count($dirTemporadas)) {
-							foreach( $dirTemporadas as $temporada) {
+						$lastEpisode = null;
+						if (count(dirTemporadas)>0) {
+							foreach($dirTemporadas as $temporada) {
 								$numTemporadas++;
+								if ($temporada["isFile"]==1) {
+									break;
+								}
 								if (strpos($temporada["element"], "_tmp") !== false) {
 									$enDescarga = 1;
+									$numEpisodes = $this->sdir($temporada["path"]."/".$temporada["element"], "");
+									$lastEpisode = count($numEpisodes);
 								}
 							}
 						}
-						$this->saveSerie($serie["element"], $serie["path"], $numTemporadas, $enDescarga);
+						$this->saveSerie($serie["element"], $serie["path"], $numTemporadas, $enDescarga, $lastEpisode);
 					}
 				}
 			}
 		}
 	}
 
-	private function saveSerie($pNombreSerie, $pRutaFisica, $pNumTemporadas, $pEnDescarga) {
+	private function saveSerie($pNombreSerie, $pRutaFisica, $pNumTemporadas, $pEnDescarga, $pLastEpisode=null) {
 		// 01. Existe en la base de datos ?
 		$res = $this->dbSelect('tbSerie', 'nombreSerie', $pNombreSerie);
 		$resNum = count($res);
@@ -95,15 +113,22 @@ class AppMedia extends crud {
 				'nombreSerie'=>$pNombreSerie,
 				'numTemporadas'=>$pNumTemporadas,
 				'enDescarga'=>$pEnDescarga,
-				'rutaFisica'=>$pRutaFisica
+				'rutaFisica'=>$pRutaFisica,
+				'lastEpisode'=>$pLastEpisode
 			);
 			$this->dbInsert('tbSerie', array($dbItem));
 		} elseif ($resNum == 1) {
 		// 03. Actualiza registro
-			$this->dbUpdate('tbSerie', 'numTemporadas', $pNumTemporadas, 'uuid', $res[0]["uuid"]);
-			$this->dbUpdate('tbSerie', 'enDescarga', $pEnDescarga, 'uuid', $res[0]["uuid"]);
+			$dbItem = array(
+				'numTemporadas'=>$pNumTemporadas,
+				'enDescarga'=>$pEnDescarga,
+				'lastEpisode'=>$pLastEpisode
+			);
+			$this->dbUpdate('tbSerie', null, $dbItem, 'uuid', $res[0]["uuid"]);
+			//Control duplicado en varias carpetas
+			echo (!strcmp($pRutaFisica, $res[0]["rutaFisica"])) ? "":"\t\tVerificar posibles duplicados: $pNombreSerie ($pRutaFisica, ".$res[0]["rutaFisica"]."))\n";
 		} else {
-			echo "Duplicado: " . $pNombreSerie;
+			echo "Registro duplicado: ".$pNombreSerie."\n";
 		}
 	}
 	
@@ -115,7 +140,7 @@ class AppMedia extends crud {
 		if (is_dir($path)) {
 			foreach ($dir[$path] as $i=>$entry) {
 				if ($entry!='.' && $entry!='..' && !fnmatch($mask, $entry) ) {
-					$sdir[] = array("path"=>$path, "element"=>$entry);
+					$sdir[] = array("path"=>$path, "element"=>$entry, "isFile"=>(int)is_file($path."/".$entry) );
 				}
 			}
 		} else {
