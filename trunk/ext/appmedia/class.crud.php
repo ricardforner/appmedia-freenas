@@ -1,5 +1,15 @@
 <?php
-
+/**
+ * Clase CRUD
+ *
+ * Esta clase facilita la capa de acceso PDO a la base de datos
+ *
+ * @author Ricard Forner
+ * @version 0.1.0
+ * @package appmedia
+ *
+ * @link http://www.phpro.org/classes/PDO-CRUD.html
+ */
 class crud {
 
     private $db;

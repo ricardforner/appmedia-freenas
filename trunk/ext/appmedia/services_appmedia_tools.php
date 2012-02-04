@@ -1,5 +1,15 @@
 #!/usr/local/bin/php
 <?php
+/**
+ * Services_AppMedia_Tools
+ *
+ * Pagina que contiene la ficha de herramientas del modulo AppMedia
+ *
+ * @author Ricard Forner
+ * @version 0.1.0
+ * @package appmedia
+ */
+
 require("auth.inc");
 require("guiconfig.inc");
 
