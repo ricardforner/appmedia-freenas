@@ -1,4 +1,4 @@
-#summary Install and cinfiguration page.
+#summary Install and configuration page.
 #labels Configuration
 
 = Introduction =
