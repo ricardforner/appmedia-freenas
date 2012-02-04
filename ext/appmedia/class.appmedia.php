@@ -1,9 +1,22 @@
 <?php
+/**
+ * Clase AppMedia
+ *
+ * Esta clase facilita la capa de abstraccion a la base de datos
+ *
+ * @author Ricard Forner
+ * @version 0.1.0
+ * @package appmedia
+ */
 
 include_once('class.crud.php');
 
 class AppMedia extends crud {
 
+	const ACTION_MODIFY_UPDATE	= 'upd';
+	const ACTION_MODIFY_DELETE	= 'del';
+	const ACTION_MODIFY_ADD		= 'add';
+	
 	private $manageBBDD;
 	protected $dirSources;
 	
@@ -147,7 +160,52 @@ class AppMedia extends crud {
 			$sdir[] = -1;
 		}
 		return ($sdir);
-	} 
+	}
+	
+	public function doGetSerie($fieldname, $id) {
+		return $this->dbSelect('tbSerie', $fieldname, $id);
+	}
+
+	public function doActionSerie($param, $mode) {
+		switch ($mode) {
+			
+			// Accion de borrar registro
+			case self::ACTION_MODIFY_DELETE:
+				$this->dbDelete('tbSerie', 'uuid', $param["uuid"]);
+			break;
+			
+			// Accion de insertar registro
+			case self::ACTION_MODIFY_ADD:
+				$dbItem = array(
+					'nombreSerie'=>$param["nombreSerie"],
+					'numTemporadas'=>$param["numTemporadas"],
+					'enDescarga'=>$param["enDescarga"],
+					'rutaFisica'=>$param["rutaFisica"],
+					'lastEpisode'=>$param["lastEpisode"],
+					'notas'=>$param["notas"]
+				);
+				$this->dbInsert('tbSerie', array($dbItem));
+			break;
+
+			// Accion de modificar registro
+			case self::ACTION_MODIFY_UPDATE:
+				$dbItem = array(
+					'nombreSerie'=>$param["nombreSerie"],
+					'numTemporadas'=>$param["numTemporadas"],
+					'enDescarga'=>$param["enDescarga"],
+					'rutaFisica'=>$param["rutaFisica"],
+					'lastEpisode'=>$param["lastEpisode"],
+					'notas'=>$param["notas"]
+				);
+				if ($param["uuid"]=="-1") {
+					$this->dbInsert('tbSerie', array($dbItem));
+				} else {
+					$this->dbUpdate('tbSerie', null, $dbItem, 'uuid', $param["uuid"]);
+				}
+			break;
+
+		}
+	}
 
 } // fin de la classe
 

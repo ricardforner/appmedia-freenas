@@ -1,5 +1,15 @@
 #!/usr/local/bin/php
 <?php
+/**
+ * Services_AppMedia_Tools
+ *
+ * Pagina que contiene el acceso principal al modulo AppMedia
+ *
+ * @author Ricard Forner
+ * @version 0.1.0
+ * @package appmedia
+ */
+
 require("auth.inc");
 require("guiconfig.inc");
 
@@ -22,7 +32,15 @@ try {
 	$errormsg[] = "La 'Base de datos' no est&aacute; creada. Puede crearla en el men&uacute; de Herramientas.";
 }
 
+if ($_GET['act'] === "del") {
+	$item = array();
+	$item['uuid'] = $_GET['uuid'];
 
+	$mode = AppMedia::ACTION_MODIFY_DELETE;
+	$app->doActionSerie($item, $mode);
+	header("Location: services_appmedia.php");
+	exit;
+}
 ?>
 <?php include("fbegin.inc");?>
 <?php if($errormsg) print_input_errors($errormsg);?>
@@ -69,7 +87,7 @@ foreach($rows as $row) {
 											<td class="listr"><?=$row["notas"]?>&nbsp;</td>
 											<td valign="middle" nowrap="nowrap" class="list">
 												<a href="services_appmedia_edit.php?uuid=<?=$row['uuid'];?>"><img src="e.gif" title="<?=gettext("Edit");?>" border="0" alt="<?=gettext("Edit");?>" /></a>&nbsp;
-												<a href="services_appmedia_edit.php?act=del&amp;uuid=<?=$row['uuid'];?>" onclick="return confirm('&iquest;Est&aacute;s seguro de borrar el registro?')"><img src="x.gif" title="<?=gettext("Delete");?>" border="0" alt="<?=gettext("Delete");?>" /></a>
+												<a href="services_appmedia.php?act=del&amp;uuid=<?=$row['uuid'];?>" onclick="return confirm('&iquest;Est&aacute;s seguro de borrar el registro?')"><img src="x.gif" title="<?=gettext("Delete");?>" border="0" alt="<?=gettext("Delete");?>" /></a>
 											</td>
 											</tr>
 <?php
