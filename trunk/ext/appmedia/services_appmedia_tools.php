@@ -6,7 +6,7 @@
  * Pagina que contiene la ficha de herramientas del modulo AppMedia
  *
  * @author Ricard Forner
- * @version 0.1.0
+ * @version 0.1.1
  * @package appmedia
  */
 
@@ -63,6 +63,7 @@ if (!isset($do_action)) {
 		<?php if ($input_errors) print_input_errors($input_errors);?>
 		<form action="services_appmedia_tools.php" method="post" name="iform" id="iform">
 			<table width="100%" border="0" cellpadding="6" cellspacing="0">
+			<?php html_titleline("Acciones disponibles");?>
 			<?php html_combobox("action", gettext("Command"), $action,
 				array(
 					"create" => "Crear base de datos",
@@ -95,7 +96,13 @@ if (!isset($do_action)) {
 				echo('</pre>');
 			}?>
 			<div id="remarks">
-				<?php html_remark("note", gettext("Note"), "La opci&oacute;n de 'Escanear directorios' actualiza los registros si estos son encontrados en la base de datos, en caso contrario, crea una nueva entrada.");?>
+				<?php html_remark("note", gettext("Note"), "Detalles sobre las acciones disponibles:
+				<div id='enumeration'><ul>
+					<li><b>Crear base de datos</b> crea el fichero de base de datos. S&oacute;lo debe ejecutarse si no est&aacute; creada.</li>
+					<li><b>Borrar base de datos</b> borra el fichero de base de datos si existe.</li>
+					<li><b>Buscar informaci&oacute;n en la web</b> <i>no est&aacute; implementada en la versi&oacute;n 0.1.x</i>.</li>
+					<li><b>Escanear directorios</b> actualiza los registros si estos son encontrados en la base de datos, en caso contrario, crea una nueva entrada.</li>
+				</ul></div>");?>
 			</div>
 		<?php include("formend.inc");?>
 		</form>		
