@@ -1,0 +1,10 @@
+#summary Usage videos page.
+#labels Featured
+
+= Introduction =
+
+Watch some videos of this application.
+
+= Release v0.1.0 =
+
+<wiki:video url="http://www.youtube.com/watch?v=nthaQ2VevNY" width="459" height="344"/>
