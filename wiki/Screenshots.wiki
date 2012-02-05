@@ -1,0 +1,23 @@
+#summary Screenhots page.
+#labels Featured
+
+= Introduction =
+
+See screenshots of *AppMedia for FreeNAS*.
+
+= Version 0.1.1 =
+
+== Configuration page ==
+http://appmedia-freenas.googlecode.com/svn/wiki/Screenshots/20120205_04.jpg
+
+== Tools page ==
+http://appmedia-freenas.googlecode.com/svn/wiki/Screenshots/20120205_03.jpg
+
+
+= Version 0.1.0 =
+
+== Main page ==
+http://appmedia-freenas.googlecode.com/svn/wiki/Screenshots/20120205_01.jpg
+
+== Edit page ==
+http://appmedia-freenas.googlecode.com/svn/wiki/Screenshots/20120205_02.jpg
