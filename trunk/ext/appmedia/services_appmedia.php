@@ -6,7 +6,7 @@
  * Pagina que contiene el acceso principal al modulo AppMedia
  *
  * @author Ricard Forner
- * @version 0.1.0
+ * @version 0.1.1
  * @package appmedia
  */
 
@@ -50,6 +50,7 @@ if ($_GET['act'] === "del") {
 			<ul id="tabnav">
 				<li class="tabact"><a href="services_appmedia.php" title="<?=gettext("Reload page");?>"><span>Series</span></a></li>
 				<li class="tabinact"><a href="services_appmedia_tools.php"><span>Herramientas</span></a></li>
+				<li class="tabinact"><a href="services_appmedia_config.php"><span>Configuraci&oacute;n</span></a></li>
 			</ul>
 		</td>
 	</tr>
