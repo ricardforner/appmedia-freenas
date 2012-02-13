@@ -5,7 +5,7 @@
  * Esta clase facilita la capa de abstraccion a la base de datos
  *
  * @author Ricard Forner
- * @version 0.1.0
+ * @version 0.1.1
  * @package appmedia
  */
 
@@ -17,22 +17,12 @@ class AppMedia extends crud {
 	const ACTION_MODIFY_DELETE	= 'del';
 	const ACTION_MODIFY_ADD		= 'add';
 	
-	private $manageBBDD;
-	protected $dirSources;
-	
 	public function __construct() {
 		$this->dsn = "sqlite:/mnt/cfinterno/usr/www/bbdd/media_series.sdb";
-		$this->dirSources = array(
-			"/mnt/share01/SERIES"
-			,"/mnt/share02/SERIES"
-			,"/mnt/share03/MINISERIES"
-//			,"/mnt/nmt/Video"
-		);
-		$this->manageBBDD = true;
 	}
 	
 	public function manageDatabase() {
-		return ($this->manageBBDD);
+		return ($this->getConfigManage());
 	}
 	
 	public function listaSeries($paramOrder) {
@@ -47,8 +37,15 @@ class AppMedia extends crud {
 	}
 
 	public function doCreateDatabase() {
+		// Tabla de configuracion
+		$sql = "CREATE TABLE IF NOT EXISTS tbConfig (
+				uuid INTEGER PRIMARY KEY,
+				manage BOOLEAN,
+				folder TEXT
+			)";
+		$this->rawQuery($sql);
 		// Tabla de series
-		$sql = "CREATE TABLE tbSerie (
+		$sql = "CREATE TABLE IF NOT EXISTS tbSerie (
 				uuid INTEGER PRIMARY KEY AUTOINCREMENT,
 				nombreSerie VARCHAR(100),
 				numTemporadas INTEGER,
@@ -58,8 +55,8 @@ class AppMedia extends crud {
 				notas VARCHAR(255)              
 			)";
 		$this->rawQuery($sql);
-		//Tabla complementaria de series
-		$sql = "CREATE TABLE tbSerieComp (
+		// Tabla complementaria de series
+		$sql = "CREATE TABLE IF NOT EXISTS tbSerieComp (
 				uuid INTEGER PRIMARY KEY AUTOINCREMENT,
 				idSerie INTEGER,
 				fuente VARCHAR(20),
@@ -69,16 +66,19 @@ class AppMedia extends crud {
 	}
 	
 	public function doDropDatabase() {
-		$sql = "DROP TABLE tbSerieComp;";
+		$sql = "DROP TABLE IF EXISTS tbSerieComp;";
 		$this->rawQuery($sql);
-		$sql = "DROP TABLE tbSerie;";
+		$sql = "DROP TABLE IF EXISTS tbSerie;";
+		$this->rawQuery($sql);
+		$sql = "DROP TABLE IF EXISTS tbConfig;";
 		$this->rawQuery($sql);
 	}
 
 	public function doScanMedia() {
 		$ignore = array( '.', '..' );
 		
-		foreach ($this->dirSources as $source) {
+		$sources = $this->getConfigSources();
+		foreach ($sources as $source) {
 			echo $source."\n";
 			$dirSource = $this->sdir($source, "");
 			foreach ($dirSource as $item) {
@@ -89,7 +89,7 @@ class AppMedia extends crud {
 					$mainPath = $item["path"];
 					$mainSource = $item["element"];
 					// 01. Busco series
-					$listaSeries = $this->sdir($mainPath."/".$mainSource, "*tbn");
+					$listaSeries = $this->sdir($mainPath.$mainSource, "*tbn");
 					foreach( $listaSeries as $serie) {
 						//02. Detalle de las temporadas
 						$dirTemporadas = $this->sdir($serie["path"]."/".$serie["element"], "*tbn");
@@ -207,6 +207,55 @@ class AppMedia extends crud {
 		}
 	}
 
+	public function doGetConfig($fieldname, $id) {
+		return $this->dbSelect('tbConfig', $fieldname, $id);
+	}
+
+	public function saveConfig($param) {
+		// 00. Pre-proceso parametros
+		if (is_array($param['folder'])) {
+			$folderCSV = implode(';', $param['folder']);
+		}
+		// 01. Existe en la base de datos ?
+		$res = $this->dbSelect('tbConfig', 'uuid', $param['uuid']);
+		if (count($res) == 0) {
+		// 02. Inserta registro
+			$dbItem = array(
+				'uuid'=>$param['uuid'],
+				'manage'=>$param['manage'],
+				'folder'=>$folderCSV
+			);
+			$this->dbInsert('tbConfig', array($dbItem));
+		} else {
+		// 03. Actualiza registro
+			$dbItem = array(
+				'manage'=>$param['manage'],
+				'folder'=>$folderCSV
+			);
+			$this->dbUpdate('tbConfig', null, $dbItem, 'uuid', $param['uuid']);
+		}
+	}
+
+	private function getConfigSources() {
+		$res = $this->dbSelect('tbConfig', 'uuid', 1);
+		if (count($res) == 0) {
+			$sources = array();
+		} else {
+			$sources = explode(';', $res[0]['folder']);
+		}
+		return $sources;
+	}
+	
+	private function getConfigManage() {
+		$res = $this->dbSelect('tbConfig', 'uuid', 1);
+		if (count($res) == 0) {
+			$enableManage = true;
+		} else {
+			$enableManage = $res[0]['manage'];
+		}
+		return $enableManage;
+	}
+	
 } // fin de la classe
 
 ?>

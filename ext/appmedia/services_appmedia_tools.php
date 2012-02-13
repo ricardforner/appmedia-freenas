@@ -55,6 +55,7 @@ if (!isset($do_action)) {
 			<ul id="tabnav">
 				<li class="tabinact"><a href="services_appmedia.php"><span>Series</span></a></li>
 				<li class="tabact"><a href="services_appmedia_tools.php" title="<?=gettext("Reload page");?>"><span>Herramientas</span></a></li>
+				<li class="tabinact"><a href="services_appmedia_config.php"><span>Configuraci&oacute;n</span></a></li>
 			</ul>
 		</td>
 	</tr>
