@@ -20,7 +20,7 @@ New *Configuración tab* added. It's not necessary edit any file, only run once 
 
 == Database management ==
 
-New *Configuraciçon tab* added for this feature.
+New *Configuración tab* added for this feature.
 
 = Configuration v0.1.0 =
 
