@@ -6,14 +6,14 @@
  * Pagina que contiene el acceso principal al modulo AppMedia
  *
  * @author Ricard Forner
- * @version 0.1.1
+ * @version 0.1.2
  * @package appmedia
  */
 
 require("auth.inc");
 require("guiconfig.inc");
 
-$pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia");
+$pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". "Series");
 
 include 'class.appmedia.php';
 
@@ -49,6 +49,7 @@ if ($_GET['act'] === "del") {
 		<td class="tabnavtbl">
 			<ul id="tabnav">
 				<li class="tabact"><a href="services_appmedia.php" title="<?=gettext("Reload page");?>"><span>Series</span></a></li>
+				<li class="tabinact"><a href="services_appmedia_movie.php"><span>Pel&iacute;culas</span></a></li>
 				<li class="tabinact"><a href="services_appmedia_tools.php"><span>Herramientas</span></a></li>
 				<li class="tabinact"><a href="services_appmedia_config.php"><span>Configuraci&oacute;n</span></a></li>
 			</ul>
@@ -61,7 +62,7 @@ if ($_GET['act'] === "del") {
 		<form action="services_appmedia.php" method="post">
 
 		<select id="order" class="formfld" name="order">
-			<?=$app->getOptionsOrder($orderBy)?>
+			<?=$app->getOptionsOrder($orderBy, AppMedia::TYPE_SERIE)?>
 		</select>
 		<input name="doOrder" type="submit" class="formbtn" value="Ordenar" />
 
