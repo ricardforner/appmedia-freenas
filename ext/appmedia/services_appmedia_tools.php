@@ -6,7 +6,7 @@
  * Pagina que contiene la ficha de herramientas del modulo AppMedia
  *
  * @author Ricard Forner
- * @version 0.1.1
+ * @version 0.1.2
  * @package appmedia
  */
 
@@ -54,6 +54,7 @@ if (!isset($do_action)) {
 		<td class="tabnavtbl">
 			<ul id="tabnav">
 				<li class="tabinact"><a href="services_appmedia.php"><span>Series</span></a></li>
+				<li class="tabinact"><a href="services_appmedia_movie.php"><span>Pel&iacute;culas</span></a></li>
 				<li class="tabact"><a href="services_appmedia_tools.php" title="<?=gettext("Reload page");?>"><span>Herramientas</span></a></li>
 				<li class="tabinact"><a href="services_appmedia_config.php"><span>Configuraci&oacute;n</span></a></li>
 			</ul>
@@ -76,6 +77,7 @@ if (!isset($do_action)) {
 			<div id="submit">
 				<input name="Submit" type="submit" class="formbtn" value="<?=gettext("Execute");?>" />
 			</div>
+
 			<?php if(($do_action) && (!$errormsg)) {
 				echo(sprintf("<div id='cmdoutput'>%s</div>", gettext("Command output:")));
 				echo('<pre class="cmdoutput">');
