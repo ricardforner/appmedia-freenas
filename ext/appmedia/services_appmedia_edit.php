@@ -17,7 +17,7 @@ $uuid = $_GET['uuid'];
 if (isset($_POST['uuid']))
 	$uuid = $_POST['uuid'];
 
-$pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia", isset($uuid) ? gettext("Edit") : gettext("Add"));
+$pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". "Series", isset($uuid) ? gettext("Edit") : gettext("Add"));
 
 include 'class.appmedia.php';
 
@@ -93,10 +93,10 @@ if ($_POST) {
 				<table width="100%" border="0" cellpadding="6" cellspacing="0">
 				
 <?php html_inputbox("nombreSerie", "Nombre de la Serie", $pItem['nombreSerie'], "", true, 40);?>
-<?php html_inputbox("numTemporadas", "Temporadas", $pItem['numTemporadas'], "N&uacute;mero de temporadas descargadas (almacenadas).", false, 2);?>
+<?php html_inputbox("numTemporadas", "Temporadas", $pItem['numTemporadas'], "N&uacute;mero de temporadas descargadas (almacenadas).", true, 2);?>
 <?php html_checkbox("enDescarga", "En proceso de descarga", $pItem['enDescarga'] ? true : false, "Marcar la casilla si la temporada est&aacute; en proceso de descarga. <br/><br/>El proceso de escaneado marca la casilla autom&aacute;ticamente si el nombre de la temporada contiene el sufijo _tmp (Ej: T3_tmp)", "", false);?>
 <?php html_inputbox("lastEpisode", "&Uacute;ltimo episodio (en descarga)", $pItem['lastEpisode'], "Informar del &uacute;ltimo episodio s&oacute;lo si la temporada no est&aacute; completada.", false, 2);?>				
-<?php html_filechooser("rutaFisica", "Ruta (Carpeta compartida)", $pItem['rutaFisica'], "Entra el directorio raiz de la serie.", $g['media_path'], false, 60);?>				
+<?php html_filechooser("rutaFisica", "Ruta (Carpeta compartida)", $pItem['rutaFisica'], "Entra el directorio raiz de la serie.", $g['media_path'], true, 60);?>				
 <?php html_textarea("notas", "Notas", $pItem['notas'], "Informaci&oacute;n adicional.", false);?>				
 				
 				</table>
