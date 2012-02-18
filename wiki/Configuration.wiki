@@ -6,7 +6,7 @@
 This page explains the configuration options. 
 
 
-= Configuration v0.1.1 =
+= Configuration.  Release >= 0.1.1 =
 
 == Local database ==
 
