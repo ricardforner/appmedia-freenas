@@ -6,7 +6,7 @@
  * Pagina que contiene la ficha de herramientas del modulo AppMedia
  *
  * @author Ricard Forner
- * @version 0.1.2
+ * @version 0.1.3
  * @package appmedia
  */
 
@@ -85,14 +85,17 @@ if (!isset($do_action)) {
 					case "scan":
 						echo("Escaneando directorios...". "<br />");
 						$app->doScanMedia();
+						mwexec("logger -t appmedia-extension Escaneado de directorios de contenido multimedia");
 					break;
 					case "create":
 						echo("Creando base de datos...". "<br />");
 						$app->doCreateDatabase();
+						mwexec("logger -t appmedia-extension Base de datos creada");
 					break;
 					case "drop":
 						echo("Borrando base de datos...". "<br />");
 						$app->doDropDatabase();
+						mwexec("logger -t appmedia-extension Base de datos borrada");
 					break;
 				}
 				echo (0 == $result) ? gettext("Done.") : gettext("Failed.");
