@@ -6,14 +6,14 @@
  * Pagina que contiene la ficha de configuracion del modulo AppMedia
  *
  * @author Ricard Forner
- * @version 0.1.2
+ * @version 0.1.3
  * @package appmedia
  */
 
 require("auth.inc");
 require("guiconfig.inc");
 
-$pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". "Configuracion");
+$pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". gettext("Configuration"));
 
 include 'class.appmedia.php';
 $app = new AppMedia();
@@ -84,8 +84,8 @@ if ($_POST) {
 			<ul id="tabnav">
 				<li class="tabinact"><a href="services_appmedia.php"><span>Series</span></a></li>
 				<li class="tabinact"><a href="services_appmedia_movie.php"><span>Pel&iacute;culas</span></a></li>
-				<li class="tabinact"><a href="services_appmedia_tools.php"><span>Herramientas</span></a></li>
-				<li class="tabact"><a href="services_appmedia_config.php" title="<?=gettext("Reload page");?>"><span>Configuraci&oacute;n</span></a></li>
+				<li class="tabinact"><a href="services_appmedia_tools.php"><span><?=gettext("Tools");?></span></a></li>
+				<li class="tabact"><a href="services_appmedia_config.php" title="<?=gettext("Reload page");?>"><span><?=gettext("Configuration");?></span></a></li>
 			</ul>
 		</td>
 	</tr>
@@ -95,7 +95,7 @@ if ($_POST) {
 		<form action="services_appmedia_config.php" method="post" name="iform" id="iform">
 			<table width="100%" border="0" cellpadding="6" cellspacing="0">
 			<?php html_titleline("Par&aacute;metros de configuraci&oacute;n");?>
-			<?php html_checkbox("manageBBDD", "Gesti&oacute;n de la base de datos", $pItem['manageBBDD'] ? true : false, "Marcar la casilla si desea activar los comandos de gesti&oacute;n de la base de datos.<br/><br/> Si deja la casilla sin marcar, las acciones <i>Crear base de datos</i> y <i>Borrar base de datos</i> del men&uacute; <b>herramientas</b> estar&aacute;n inactivas.", "", false);?>
+			<?php html_checkbox("manageBBDD", "Gesti&oacute;n de la base de datos", $pItem['manageBBDD'], "Marcar la casilla si desea activar los comandos de gesti&oacute;n de la base de datos.<br/><br/> Si deja la casilla sin marcar, las acciones <i>Crear base de datos</i> y <i>Borrar base de datos</i> del men&uacute; <b>herramientas</b> estar&aacute;n inactivas.", "", false);?>
 			<?php html_folderbox("scanFolderSerie", "Directorios de contenido (Series)", $pItem['scanFolderSerie'], "Ubicaci&oacute;n de los directorios de series a escanear.", $g['media_path'], false);?>
 			<?php html_folderbox("scanFolderPelicula", "Directorios de contenido (Pel&iacute;culas)", $pItem['scanFolderPelicula'], "Ubicaci&oacute;n de los directorios de pel&iacute;culas a escanear.", $g['media_path'], false);?>
 			</table>

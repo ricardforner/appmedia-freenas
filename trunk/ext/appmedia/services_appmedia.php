@@ -6,7 +6,7 @@
  * Pagina que contiene el acceso principal al modulo AppMedia
  *
  * @author Ricard Forner
- * @version 0.1.2
+ * @version 0.1.3
  * @package appmedia
  */
 
@@ -50,8 +50,8 @@ if ($_GET['act'] === "del") {
 			<ul id="tabnav">
 				<li class="tabact"><a href="services_appmedia.php" title="<?=gettext("Reload page");?>"><span>Series</span></a></li>
 				<li class="tabinact"><a href="services_appmedia_movie.php"><span>Pel&iacute;culas</span></a></li>
-				<li class="tabinact"><a href="services_appmedia_tools.php"><span>Herramientas</span></a></li>
-				<li class="tabinact"><a href="services_appmedia_config.php"><span>Configuraci&oacute;n</span></a></li>
+				<li class="tabinact"><a href="services_appmedia_tools.php"><span><?=gettext("Tools");?></span></a></li>
+				<li class="tabinact"><a href="services_appmedia_config.php"><span><?=gettext("Configuration");?></span></a></li>
 			</ul>
 		</td>
 	</tr>
@@ -69,11 +69,11 @@ if ($_GET['act'] === "del") {
 		<br/><br/>
                                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                         <tr>
-                                                <td width="36%" class="listhdrlr">Nombre de la Serie</td>
+                                                <td width="33%" class="listhdrlr">Nombre de la Serie</td>
                                                 <td width="5%" class="listhdrr">Temporadas</td>
 												<td width="14%" class="listhdrr">&Uacute;ltima temporada completada</td>
                                                 <td width="25%" class="listhdrr">Ruta (Carpeta compartida)</td>
-                                                <td width="10%" class="listhdrr">Notas</td>
+                                                <td width="13%" class="listhdrr">Notas</td>
                                                 <td width="10%" class="list"></td>
                                         </tr>
 

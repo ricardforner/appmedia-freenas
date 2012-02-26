@@ -50,8 +50,8 @@ if ($_GET['act'] === "del") {
 			<ul id="tabnav">
 				<li class="tabinact"><a href="services_appmedia.php"><span>Series</span></a></li>
 				<li class="tabact"><a href="services_appmedia_movie.php" title="<?=gettext("Reload page");?>"><span>Pel&iacute;culas</span></a></li>
-				<li class="tabinact"><a href="services_appmedia_tools.php"><span>Herramientas</span></a></li>
-				<li class="tabinact"><a href="services_appmedia_config.php"><span>Configuraci&oacute;n</span></a></li>
+				<li class="tabinact"><a href="services_appmedia_tools.php"><span><?=gettext("Tools");?></span></a></li>
+				<li class="tabinact"><a href="services_appmedia_config.php"><span><?=gettext("Configuration");?></span></a></li>
 			</ul>
 		</td>
 	</tr>
