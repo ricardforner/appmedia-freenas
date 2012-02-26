@@ -5,7 +5,7 @@
  * Esta clase facilita la capa de negocio y abstraccion a la base de datos
  *
  * @author Ricard Forner
- * @version 0.1.2
+ * @version 0.1.3
  * @package appmedia
  */
 
@@ -39,6 +39,7 @@ class AppMediaBase extends crud {
 			case self::TYPE_SERIE:
 				$ret = '<option value="nombreSerie" '. (!strcmp("nombreSerie",$orderBy)?'selected="selected"':'') .'>Nombre de la Serie</option>';
 				$ret.= '<option value="rutaFisica" '. (!strcmp("rutaFisica",$orderBy)?'selected="selected"':'') .'>Ruta - Carpeta compartida</option>';
+				$ret.= '<option value="enDescarga" '. (!strcmp("enDescarga",$orderBy)?'selected="selected"':'') .'>&Uacute;ltima temporada completada</option>';
 			break;
 			// Opciones de ordenacion Peliculas
 			case self::TYPE_MOVIE:
