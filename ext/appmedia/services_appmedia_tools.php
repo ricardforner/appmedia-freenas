@@ -13,7 +13,7 @@
 require("auth.inc");
 require("guiconfig.inc");
 
-$pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". "Herramientas");
+$pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". gettext("Tools"));
 
 include 'class.appmedia.php';
 $app = new AppMedia();
@@ -55,8 +55,8 @@ if (!isset($do_action)) {
 			<ul id="tabnav">
 				<li class="tabinact"><a href="services_appmedia.php"><span>Series</span></a></li>
 				<li class="tabinact"><a href="services_appmedia_movie.php"><span>Pel&iacute;culas</span></a></li>
-				<li class="tabact"><a href="services_appmedia_tools.php" title="<?=gettext("Reload page");?>"><span>Herramientas</span></a></li>
-				<li class="tabinact"><a href="services_appmedia_config.php"><span>Configuraci&oacute;n</span></a></li>
+				<li class="tabact"><a href="services_appmedia_tools.php" title="<?=gettext("Reload page");?>"><span><?=gettext("Tools");?></span></a></li>
+				<li class="tabinact"><a href="services_appmedia_config.php"><span><?=gettext("Configuration");?></span></a></li>
 			</ul>
 		</td>
 	</tr>
