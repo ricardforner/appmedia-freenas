@@ -10,16 +10,15 @@
  * @package appmedia
  */
 
-require("auth.inc");
-require("guiconfig.inc");
+require_once("auth.inc");
+require_once("guiconfig.inc");
+require_once("ext/appmedia/class.appmedia.php");
 
 $uuid = $_GET['uuid'];
 if (isset($_POST['uuid']))
 	$uuid = $_POST['uuid'];
 
 $pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". "Series", isset($uuid) ? gettext("Edit") : gettext("Add"));
-
-include 'class.appmedia.php';
 
 $app = new AppMedia();
 $pItem = array();

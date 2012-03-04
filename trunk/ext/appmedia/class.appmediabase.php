@@ -9,7 +9,7 @@
  * @package appmedia
  */
 
-include_once('class.crud.php');
+require_once('class.crud.php');
 
 class AppMediaBase extends crud {
 

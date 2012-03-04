@@ -10,12 +10,12 @@
  * @package appmedia
  */
 
-require("auth.inc");
-require("guiconfig.inc");
+require_once("auth.inc");
+require_once("guiconfig.inc");
+require_once("ext/appmedia/class.appmedia.php");
 
 $pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". gettext("Tools"));
 
-include 'class.appmedia.php';
 $app = new AppMedia();
 
 if (isset($_GET['action'])) {
