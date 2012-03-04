@@ -9,7 +9,7 @@
  * @package appmedia
  */
 
-include_once('class.appmediabase.php');
+require_once('class.appmediabase.php');
 
 class AppMedia extends AppMediaBase {
 

@@ -10,12 +10,11 @@
  * @package appmedia
  */
 
-require("auth.inc");
-require("guiconfig.inc");
+require_once("auth.inc");
+require_once("guiconfig.inc");
+require_once("ext/appmedia/class.appmedia.php");
 
 $pgtitle = array(gettext("Extensions"), gettext("Service") ."|". "Contenido Multimedia" ."|". "Series");
-
-include 'class.appmedia.php';
 
 if ($_POST) {
 	if (isset($_POST['doOrder'])) {
