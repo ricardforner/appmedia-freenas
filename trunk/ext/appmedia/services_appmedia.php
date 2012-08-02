@@ -89,6 +89,7 @@ foreach($rows as $row) {
 											<td valign="middle" nowrap="nowrap" class="list">
 												<a href="services_appmedia_edit.php?uuid=<?=$row['uuid'];?>"><img src="e.gif" title="<?=gettext("Edit");?>" border="0" alt="<?=gettext("Edit");?>" /></a>&nbsp;
 												<a href="services_appmedia.php?act=del&amp;uuid=<?=$row['uuid'];?>" onclick="return confirm('&iquest;Est&aacute;s seguro de borrar el registro?')"><img src="x.gif" title="<?=gettext("Delete");?>" border="0" alt="<?=gettext("Delete");?>" /></a>
+												<?=$app->printSerieLinkHtml($row["uuid"])?>
 											</td>
 											</tr>
 <?php

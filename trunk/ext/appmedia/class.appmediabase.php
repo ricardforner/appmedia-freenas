@@ -5,11 +5,12 @@
  * Esta clase facilita la capa de negocio y abstraccion a la base de datos
  *
  * @author Ricard Forner
- * @version 0.1.3
+ * @version 0.2.0
  * @package appmedia
  */
 
-require_once('class.crud.php');
+require('class.crud.php');
+require('class.appmediaplugin.php');
 
 class AppMediaBase extends crud {
 
@@ -19,6 +20,8 @@ class AppMediaBase extends crud {
 	const TYPE_SERIE			= 'serie';
 	const TYPE_MOVIE			= 'movie';
 	
+	private $appPlugin;
+
 	public function manageDatabase() {
 		return ($this->getConfigManage());
 	}
@@ -26,6 +29,28 @@ class AppMediaBase extends crud {
 	public function listaSeries($paramOrder) {
 		$order = isset($paramOrder)?$paramOrder:"nombreSerie";
 		return $this->rawSelect("SELECT * FROM tbSerie ORDER BY $order");
+	}
+
+	public function listaSeriesBy($fields, $values, $paramOrder) {
+		$whereClause = "";
+		$order = isset($paramOrder)?$paramOrder:"nombreSerie";
+		if (is_array($fields) and is_array($values)) {
+			for($i = 0; $i < sizeof($fields); $i++) {
+				$whereClause.= ($i==0) ? "WHERE ":"";
+				$whereClause.= ($i>0) ? " AND ":"";
+				$whereClause.= $fields[$i];
+				$whereClause.= " = ";
+				$whereClause.= "'";
+				$whereClause.= $values[$i];
+				$whereClause.= "'";
+			}
+		}
+		return $this->rawSelect("SELECT * FROM tbSerie $whereClause ORDER BY $order");
+	}
+
+	public function listaSeriesComp($pIdSerie, $pFuente=null) {
+		$fuente = isset($pFuente)?$pFuente:"";
+		return $this->rawSelect("SELECT * FROM tbSerieComp WHERE idSerie=$pIdSerie AND fuente LIKE '%$fuente%' ORDER BY fuente");
 	}
 
 	public function listaPeliculas($paramOrder) {
@@ -100,11 +125,16 @@ class AppMediaBase extends crud {
 		$this->rawQuery($sql);
 	}
 
+	public function doAnalizeDatabase() {
+		$sql = "VACUUM;";
+		$this->rawQuery($sql);
+	}
+	
 	public function doScanMedia() {
 		$this->doScanMediaSourceSeries();
 		$this->doScanMediaSourcePeliculas();
 	}
-	
+
 	private function doScanMediaSourceSeries() {
 		$ignore = array( '.', '..' );
 		
@@ -207,6 +237,27 @@ class AppMediaBase extends crud {
 		}
 	}
 
+	public function saveSerieComp($pIdSerie, $pURL, $pFuente) {
+		// 01. Existe en la base de datos ?
+		$records = $this->listaSeriesComp($pIdSerie);
+		$rows = (isset($records))?$records->fetchAll(PDO::FETCH_ASSOC):array();
+		// Recorrer registros para ver si existe ya en BBDD
+		$bEncontrado = false;
+		foreach($rows as $row) {
+			$bEncontrado = (0==strcmp($pFuente, $row['fuente']));
+			if ($bEncontrado) break;
+		}
+		if (!$bEncontrado) {
+			// 02. Inserta registro
+			$dbItem = array(
+				'idSerie'=>$pIdSerie,
+				'fuente'=>$pFuente,
+				'url'=>$pURL
+			);
+			$this->dbInsert('tbSerieComp', array($dbItem));
+		}
+	}
+	
 	private function savePelicula($pNombrePelicula, $pRutaFisica) {
 		// 01. Existe en la base de datos ?
 		$res = $this->doGetPelicula('nombrePelicula', $pNombrePelicula);
@@ -262,6 +313,7 @@ class AppMediaBase extends crud {
 			// Accion de borrar registro
 			case self::ACTION_MODIFY_DELETE:
 				$this->dbDelete('tbSerie', 'uuid', $param["uuid"]);
+				$this->dbDelete('tbSerieComp', 'idSerie', $param["uuid"]);
 			break;
 			
 			// Accion de insertar registro
@@ -398,6 +450,27 @@ class AppMediaBase extends crud {
 			$enableManage = $res[0]['manage'];
 		}
 		return $enableManage;
+	}
+
+	// Compatibilidad >= 0.2.x
+	// -------------------------------------------------------------------
+	private function getInstanceAppPlugin() {
+		if (!isset($this->appPlugin)) {
+			$this->appPlugin = new AppMediaPlugin($this);
+		}
+		return $this->appPlugin;
+	}
+
+	public function getPluginHtml($option, $param=null) {
+		return $this->getInstanceAppPlugin()->getHtml($option, $param=null);
+	}
+	
+	public function doPluginAction($action) {
+		$this->getInstanceAppPlugin()->doAction($action);
+	}
+
+	public function printSerieLinkHtml($idSerie) {
+		return $this->getPluginHtml('serieLink', $idSerie);
 	}
 	
 } // fin de la classe

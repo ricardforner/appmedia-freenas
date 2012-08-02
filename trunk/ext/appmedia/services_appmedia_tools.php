@@ -6,7 +6,7 @@
  * Pagina que contiene la ficha de herramientas del modulo AppMedia
  *
  * @author Ricard Forner
- * @version 0.1.3
+ * @version 0.2.0
  * @package appmedia
  */
 
@@ -33,8 +33,8 @@ if ($_POST) {
 	else if (!$app->manageDatabase() && "drop" === $_POST['action']) {
 		$errormsg[] = "Funci&oacute;n de 'Borrar base de datos' desactivada.";
 	}
-	else if ("info" === $_POST['action']) {
-		$errormsg[] = "Funci&oacute;n de 'Buscar informaci&oacute;n en la web' no implementada.";
+	else if ("-" === $_POST['action']) {
+		$errormsg[] = "Seleccione una acci&oacute;n de la lista desplegable.";
 	}
 	
 	if ((!$input_errors) || (!$errormsg)) {
@@ -67,11 +67,14 @@ if (!isset($do_action)) {
 			<table width="100%" border="0" cellpadding="6" cellspacing="0">
 			<?php html_titleline("Acciones disponibles");?>
 			<?php html_combobox("action", gettext("Command"), $action,
-				array(
-					"create" => "Crear base de datos",
-					"drop" => "Borrar base de datos",
-					"info" => "Buscar informaci&oacute;n en la web",
+				array_merge(
+					array(
 					"scan" => "Escanear directorios"
+					, "analize" => "Analizar base de datos"
+					, "create" => "Crear base de datos"
+					, "drop" => "Borrar base de datos"
+					),
+					$app->getPluginHtml('combo')
 				), "", true);?>			
 			</table>
 			<div id="submit">
@@ -87,6 +90,10 @@ if (!isset($do_action)) {
 						$app->doScanMedia();
 						mwexec("logger -t appmedia-extension Escaneado de directorios de contenido multimedia");
 					break;
+					case "analize":
+						echo("Analizando base de datos...". "<br />");
+						$app->doAnalizeDatabase();
+					break;
 					case "create":
 						echo("Creando base de datos...". "<br />");
 						$app->doCreateDatabase();
@@ -97,6 +104,11 @@ if (!isset($do_action)) {
 						$app->doDropDatabase();
 						mwexec("logger -t appmedia-extension Base de datos borrada");
 					break;
+					// AddOn - Plugins (Compatibilidad >= 0.2.x)
+					default:
+						$app->doPluginAction($action);
+						mwexec("logger -t appmedia-extension Accion $action");
+					break;
 				}
 				echo (0 == $result) ? gettext("Done.") : gettext("Failed.");
 				echo('</pre>');
@@ -104,11 +116,13 @@ if (!isset($do_action)) {
 			<div id="remarks">
 				<?php html_remark("note", gettext("Note"), "Detalles sobre las acciones disponibles:
 				<div id='enumeration'><ul>
+					<li><b>Escanear directorios</b> actualiza los registros si estos son encontrados en la base de datos, en caso contrario, crea una nueva entrada.</li>
+					<li><b>Analizar base de datos</b> analiza el fichero de base de datos. S&oacute;lo debe ejecutarse si la base de datos est&aacute; creada.</li>
 					<li><b>Crear base de datos</b> crea el fichero de base de datos. S&oacute;lo debe ejecutarse si no est&aacute; creada.</li>
 					<li><b>Borrar base de datos</b> borra el fichero de base de datos si existe.</li>
-					<li><b>Buscar informaci&oacute;n en la web</b> <i>no est&aacute; implementada en la versi&oacute;n 0.1.x</i>.</li>
-					<li><b>Escanear directorios</b> actualiza los registros si estos son encontrados en la base de datos, en caso contrario, crea una nueva entrada.</li>
-				</ul></div>");?>
+				</ul></div>
+				".$app->getPluginHtml('info'));?>
+				<div id='enumeration'><ul>
 			</div>
 		<?php include("formend.inc");?>
 		</form>		
